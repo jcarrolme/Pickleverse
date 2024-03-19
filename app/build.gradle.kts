@@ -1,8 +1,8 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
-    alias(libs.plugins.dagger.hilt.android)
     kotlin("kapt")
+    alias(libs.plugins.dagger.hilt.android)
 }
 
 android {
@@ -71,6 +71,6 @@ dependencies {
     implementation(libs.androidx.recyclerview.selection)
 }
 
-kapt {
-    correctErrorTypes = true
+hilt {
+    enableAggregatingTask = false
 }
