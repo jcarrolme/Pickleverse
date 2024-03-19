@@ -5,7 +5,10 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.recyclerview.widget.GridLayoutManager
 import com.example.pickleverse.R
+import com.example.pickleverse.databinding.FragmentCharacterListBinding
+import com.example.pickleverse.domain.model.Character
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -18,43 +21,75 @@ private const val ARG_PARAM2 = "param2"
  * create an instance of this fragment.
  */
 class CharacterListFragment : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
-        }
-    }
+    private var _binding: FragmentCharacterListBinding? = null
+    private val binding get() = _binding!!
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_character_list, container, false)
+    ): View {
+        _binding = FragmentCharacterListBinding.inflate(inflater, container, false)
+        val view = binding.root
+        initUi()
+        return view
     }
 
-    companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment CharacterListFragment.
-         */
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            CharacterListFragment().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
-                }
-            }
+    private fun initUi() {
+        initRecycler()
+    }
+
+    private fun initRecycler() {
+        val list = listOf(
+            Character(
+                id = 1,
+                name = "Rick Sanchez"
+            ),
+            Character(
+                id = 2,
+                name = "Otra persona"
+            ),
+            Character(
+                id = 3,
+                name = "Abadango Cluster Princess"
+            ),
+            Character(
+                id = 3,
+                name = "Morty Rick"
+            ),
+            Character(
+                id = 3,
+                name = "Morty Rick"
+            ),
+            Character(
+                id = 3,
+                name = "Morty Rick"
+            ),
+            Character(
+                id = 3,
+                name = "Morty Rick"
+            ),
+            Character(
+                id = 3,
+                name = "Morty Rick"
+            ),
+            Character(
+                id = 3,
+                name = "Morty Rick"
+            ),
+            Character(
+                id = 3,
+                name = "Morty Rick"
+            )
+        )
+        val spacing = resources.getDimensionPixelSize(R.dimen.dimen_16dp)
+        val adapter = CharacterListAdapter(list)
+        binding.rvCharacterList.layoutManager = GridLayoutManager(requireContext(), 2)
+        binding.rvCharacterList.adapter = adapter
+        binding.rvCharacterList.addItemDecoration(GridSpacingItemDecoration(2, spacing, true))
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 }
