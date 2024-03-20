@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.pickleverse.data.core.CustomResult
 import com.example.pickleverse.domain.model.Character
+import com.example.pickleverse.domain.usecase.GetCharactersByNameUseCase
 import com.example.pickleverse.domain.usecase.GetCharactersUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -16,9 +17,11 @@ import javax.inject.Inject
 
 @HiltViewModel
 class CharacterListViewModel @Inject constructor(
-    private val getCharactersUseCase: GetCharactersUseCase
+    private val getCharactersUseCase: GetCharactersUseCase,
+    private val getCharactersByNameUseCase: GetCharactersByNameUseCase
 ) : ViewModel() {
     val characterList: MutableList<Character> = mutableListOf()
+    val updatedCharacterList: MutableList<Character> = mutableListOf()
     private val mUiState = MutableStateFlow<ListUiState>(ListUiState.Loading)
     val uiState: StateFlow<ListUiState> = mUiState
 
@@ -29,12 +32,14 @@ class CharacterListViewModel @Inject constructor(
             // Simulated delay
             delay(LOADING_DELAY)
 
-            mUiState.value = ListUiState.Loading
             try {
                 when (val response = getCharactersUseCase()) {
                     is CustomResult.Success -> {
                         if (response.data != null) {
-                            response.data.results?.let { characterList.addAll(it) }
+                            response.data.results?.let {
+                                characterList.clear()
+                                characterList.addAll(it)
+                            }
                             mUiState.value = ListUiState.Success(characterList)
                         }
                     }
@@ -42,7 +47,32 @@ class CharacterListViewModel @Inject constructor(
                         mUiState.value = ListUiState.Error
                     }
                 }
-            } catch (e: Exception){
+            } catch (e: Exception) {
+                mUiState.value = ListUiState.Error
+            }
+        }
+    }
+
+    fun searchCharactersByName(query: String) {
+        viewModelScope.launch(Dispatchers.IO) {
+            mUiState.value = ListUiState.Loading
+
+            try {
+                when (val response = getCharactersByNameUseCase(query)) {
+                    is CustomResult.Success -> {
+                        if (response.data != null) {
+                            response.data.results?.let {
+                                characterList.clear()
+                                characterList.addAll(it)
+                            }
+                            mUiState.value = ListUiState.Success(characterList)
+                        }
+                    }
+                    is CustomResult.Error -> {
+                        mUiState.value = ListUiState.Error
+                    }
+                }
+            } catch (e: Exception) {
                 mUiState.value = ListUiState.Error
             }
         }

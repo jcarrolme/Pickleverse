@@ -1,5 +1,6 @@
 package com.example.pickleverse.presentation.character.list
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -12,6 +13,7 @@ import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.pickleverse.R
 import com.example.pickleverse.databinding.FragmentCharacterListBinding
@@ -27,6 +29,8 @@ class CharacterListFragment : Fragment() {
     private val binding get() = _binding!!
 
     private val viewModel: CharacterListViewModel by activityViewModels()
+
+    private lateinit var adapter: CharacterListAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -53,6 +57,7 @@ class CharacterListFragment : Fragment() {
     }
 
     private fun initUi() {
+        initAdapter()
         initRecycler()
         initSearchView()
     }
@@ -61,9 +66,21 @@ class CharacterListFragment : Fragment() {
         (requireActivity() as BaseActivity).configRecyclerViewFallDown(binding.rvCharacterList)
     }
 
-    private fun initAdapter(list: List<Character>) {
-        val adapter = CharacterListAdapter(list)
+    private fun initAdapter() {
+        adapter = CharacterListAdapter()
         binding.rvCharacterList.adapter = adapter
+    }
+
+    @SuppressLint("NotifyDataSetChanged")
+    private fun updateAdapter(list: List<Character>) {
+        adapter.setCharacterList(list)
+
+        if (adapter.getCharacterList().isNotEmpty()) {
+            val diffResult = DiffUtil.calculateDiff(CharacterDiffCallback(adapter.getCharacterList(), list))
+            adapter.setCharacterList(list)
+            diffResult.dispatchUpdatesTo(adapter)
+            adapter.notifyDataSetChanged()
+        }
     }
 
     private fun initSearchView() {
@@ -80,7 +97,7 @@ class CharacterListFragment : Fragment() {
     }
 
     private fun searchCharacters(query: String) {
-
+        viewModel.searchCharactersByName(query)
     }
 
     private fun initUiState() {
@@ -111,7 +128,7 @@ class CharacterListFragment : Fragment() {
     }
 
     private fun onSuccessState(list: List<Character>) {
-        initAdapter(list)
+        updateAdapter(list)
         binding.searchView.isVisible = true
         // TODO: HideLoading
     }

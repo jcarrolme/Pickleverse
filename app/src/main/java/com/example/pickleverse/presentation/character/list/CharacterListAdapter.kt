@@ -7,9 +7,9 @@ import com.example.pickleverse.databinding.ItemCharacterBinding
 import com.example.pickleverse.domain.model.Character
 import com.example.pickleverse.presentation.utils.GlideImageLoader
 
-class CharacterListAdapter(
-    private val characterList: List<Character>
-) : RecyclerView.Adapter<CharacterListAdapter.CharacterViewHolder>() {
+class CharacterListAdapter: RecyclerView.Adapter<CharacterListAdapter.CharacterViewHolder>() {
+
+    private var characterList: List<Character> = emptyList()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CharacterViewHolder {
         val binding = ItemCharacterBinding.inflate(LayoutInflater.from(parent.context), parent, false)
@@ -22,6 +22,13 @@ class CharacterListAdapter(
     }
 
     override fun getItemCount(): Int = characterList.size
+
+    fun setCharacterList(newCharacterList: List<Character>) {
+        characterList = newCharacterList
+    }
+
+    fun getCharacterList(): List<Character> = characterList
+
 
     inner class CharacterViewHolder(private val binding: ItemCharacterBinding) : RecyclerView.ViewHolder(binding.root) {
 
