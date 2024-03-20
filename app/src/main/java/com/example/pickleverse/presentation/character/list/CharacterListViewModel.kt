@@ -27,9 +27,9 @@ class CharacterListViewModel @Inject constructor(
             try {
                 when (val response = getCharactersUseCase()) {
                     is CustomResult.Success -> {
-                        mUiState.value = ListUiState.Success
                         if (response.data != null) {
                             response.data.results?.let { characterList.addAll(it) }
+                            mUiState.value = ListUiState.Success(characterList)
                         }
                     }
                     is CustomResult.Error -> {

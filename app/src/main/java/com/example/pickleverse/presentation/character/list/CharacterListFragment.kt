@@ -40,7 +40,6 @@ class CharacterListFragment : Fragment() {
 
     private fun init() {
         initConfig()
-        initRecycler(listOf())
         initUiState()
     }
 
@@ -72,7 +71,7 @@ class CharacterListFragment : Fragment() {
                         is ListUiState.Error ->
                             onErrorState()
                         is ListUiState.Success ->
-                            onSuccessState()
+                            onSuccessState(uiState.list)
                     }
                 }
             }
@@ -87,8 +86,8 @@ class CharacterListFragment : Fragment() {
         // Nothing
     }
 
-    private fun onSuccessState() {
-        Toast.makeText(requireContext(), "Success", Toast.LENGTH_SHORT).show()
+    private fun onSuccessState(list: List<Character>) {
+        initRecycler(list)
     }
 
     private fun onErrorState() {
