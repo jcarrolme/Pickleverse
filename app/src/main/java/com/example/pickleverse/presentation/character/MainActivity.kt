@@ -7,11 +7,12 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.example.pickleverse.R
 import com.example.pickleverse.databinding.ActivityMainBinding
+import com.example.pickleverse.presentation.BaseActivity
 import com.example.pickleverse.presentation.character.list.CharacterListFragment
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class MainActivity : AppCompatActivity() {
+class MainActivity : BaseActivity() {
     private lateinit var binding: ActivityMainBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {

@@ -14,6 +14,8 @@ import androidx.recyclerview.widget.GridLayoutManager
 import com.example.pickleverse.R
 import com.example.pickleverse.databinding.FragmentCharacterListBinding
 import com.example.pickleverse.domain.model.Character
+import com.example.pickleverse.presentation.BaseActivity
+import com.example.pickleverse.presentation.utils.configRecyclerViewFallDown
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
@@ -41,6 +43,7 @@ class CharacterListFragment : Fragment() {
     private fun init() {
         initConfig()
         initUiState()
+        initUi()
     }
 
     private fun initConfig() {
@@ -48,15 +51,16 @@ class CharacterListFragment : Fragment() {
     }
 
     private fun initUi() {
-
+        initRecycler()
     }
 
-    private fun initRecycler(list: List<Character>) {
-        val spacing = resources.getDimensionPixelSize(R.dimen.dimen_16dp)
+    private fun initRecycler() {
+        (requireActivity() as BaseActivity).configRecyclerViewFallDown(binding.rvCharacterList)
+    }
+
+    private fun initAdapter(list: List<Character>) {
         val adapter = CharacterListAdapter(list)
-        binding.rvCharacterList.layoutManager = GridLayoutManager(requireContext(), 2)
         binding.rvCharacterList.adapter = adapter
-        binding.rvCharacterList.addItemDecoration(GridSpacingItemDecoration(2, spacing, true))
     }
 
     private fun initUiState() {
@@ -87,7 +91,7 @@ class CharacterListFragment : Fragment() {
     }
 
     private fun onSuccessState(list: List<Character>) {
-        initRecycler(list)
+        initAdapter(list)
         // TODO: HideLoading
     }
 
