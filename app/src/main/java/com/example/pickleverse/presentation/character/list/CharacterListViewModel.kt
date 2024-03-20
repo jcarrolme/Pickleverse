@@ -7,6 +7,7 @@ import com.example.pickleverse.domain.model.Character
 import com.example.pickleverse.domain.usecase.GetCharactersUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
@@ -24,6 +25,11 @@ class CharacterListViewModel @Inject constructor(
     fun getCharacters() {
         viewModelScope.launch(Dispatchers.IO) {
             mUiState.value = ListUiState.Loading
+
+            // Simulated delay
+            delay(LOADING_DELAY)
+
+            mUiState.value = ListUiState.Loading
             try {
                 when (val response = getCharactersUseCase()) {
                     is CustomResult.Success -> {
@@ -39,7 +45,10 @@ class CharacterListViewModel @Inject constructor(
             } catch (e: Exception){
                 mUiState.value = ListUiState.Error
             }
-            mUiState.value = ListUiState.HideLoading
         }
+    }
+
+    companion object {
+        private const val LOADING_DELAY = 2500L
     }
 }

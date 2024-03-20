@@ -79,15 +79,16 @@ class CharacterListFragment : Fragment() {
     }
 
     private fun onLoadingState() {
-        // Nothing
+        Toast.makeText(context, "START", Toast.LENGTH_SHORT).show()
     }
 
     private fun onHideLoadingState() {
-        // Nothing
+        Toast.makeText(context, "HIDE", Toast.LENGTH_SHORT).show()
     }
 
     private fun onSuccessState(list: List<Character>) {
         initRecycler(list)
+        // TODO: HideLoading
     }
 
     private fun onErrorState() {
