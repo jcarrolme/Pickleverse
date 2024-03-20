@@ -9,4 +9,8 @@ class CharacterRepository @Inject constructor(private val characterDataStore: Re
     suspend fun getCharacters(): CustomResult<CharacterResponseBo> {
         return characterDataStore.getCharacters()
     }
+
+    suspend fun getCharactersByName(query: String): CustomResult<CharacterResponseBo> {
+        return characterDataStore.getCharactersByName(query)
+    }
 }
