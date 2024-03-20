@@ -6,6 +6,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.appcompat.widget.SearchView
+import androidx.core.view.isVisible
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
@@ -52,6 +54,7 @@ class CharacterListFragment : Fragment() {
 
     private fun initUi() {
         initRecycler()
+        initSearchView()
     }
 
     private fun initRecycler() {
@@ -61,6 +64,23 @@ class CharacterListFragment : Fragment() {
     private fun initAdapter(list: List<Character>) {
         val adapter = CharacterListAdapter(list)
         binding.rvCharacterList.adapter = adapter
+    }
+
+    private fun initSearchView() {
+        binding.searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String?): Boolean {
+                return true
+            }
+
+            override fun onQueryTextChange(newText: String?): Boolean {
+                newText?.let { searchCharacters(it) }
+                return true
+            }
+        })
+    }
+
+    private fun searchCharacters(query: String) {
+
     }
 
     private fun initUiState() {
@@ -92,6 +112,7 @@ class CharacterListFragment : Fragment() {
 
     private fun onSuccessState(list: List<Character>) {
         initAdapter(list)
+        binding.searchView.isVisible = true
         // TODO: HideLoading
     }
 
