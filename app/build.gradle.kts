@@ -74,6 +74,10 @@ dependencies {
     implementation(libs.androidx.recyclerview.selection)
 }
 
+kapt {
+    correctErrorTypes = true
+}
+
 hilt {
     enableAggregatingTask = false
 }
