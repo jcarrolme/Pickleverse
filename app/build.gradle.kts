@@ -72,6 +72,9 @@ dependencies {
     implementation(libs.androidx.recyclerview)
     // For control over item selection of both touch and mouse driven selection
     implementation(libs.androidx.recyclerview.selection)
+
+    // Glide
+    implementation("com.github.bumptech.glide:glide:4.16.0")
 }
 
 kapt {

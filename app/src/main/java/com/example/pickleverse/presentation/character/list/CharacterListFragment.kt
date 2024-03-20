@@ -14,6 +14,8 @@ import androidx.recyclerview.widget.GridLayoutManager
 import com.example.pickleverse.R
 import com.example.pickleverse.databinding.FragmentCharacterListBinding
 import com.example.pickleverse.domain.model.Character
+import com.example.pickleverse.presentation.BaseActivity
+import com.example.pickleverse.presentation.utils.configRecyclerViewFallDown
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
@@ -40,8 +42,8 @@ class CharacterListFragment : Fragment() {
 
     private fun init() {
         initConfig()
-        initRecycler(listOf())
         initUiState()
+        initUi()
     }
 
     private fun initConfig() {
@@ -49,15 +51,16 @@ class CharacterListFragment : Fragment() {
     }
 
     private fun initUi() {
-
+        initRecycler()
     }
 
-    private fun initRecycler(list: List<Character>) {
-        val spacing = resources.getDimensionPixelSize(R.dimen.dimen_16dp)
+    private fun initRecycler() {
+        (requireActivity() as BaseActivity).configRecyclerViewFallDown(binding.rvCharacterList)
+    }
+
+    private fun initAdapter(list: List<Character>) {
         val adapter = CharacterListAdapter(list)
-        binding.rvCharacterList.layoutManager = GridLayoutManager(requireContext(), 2)
         binding.rvCharacterList.adapter = adapter
-        binding.rvCharacterList.addItemDecoration(GridSpacingItemDecoration(2, spacing, true))
     }
 
     private fun initUiState() {
@@ -72,7 +75,7 @@ class CharacterListFragment : Fragment() {
                         is ListUiState.Error ->
                             onErrorState()
                         is ListUiState.Success ->
-                            onSuccessState()
+                            onSuccessState(uiState.list)
                     }
                 }
             }
@@ -80,15 +83,16 @@ class CharacterListFragment : Fragment() {
     }
 
     private fun onLoadingState() {
-        // Nothing
+        Toast.makeText(context, "START", Toast.LENGTH_SHORT).show()
     }
 
     private fun onHideLoadingState() {
-        // Nothing
+        Toast.makeText(context, "HIDE", Toast.LENGTH_SHORT).show()
     }
 
-    private fun onSuccessState() {
-        Toast.makeText(requireContext(), "Success", Toast.LENGTH_SHORT).show()
+    private fun onSuccessState(list: List<Character>) {
+        initAdapter(list)
+        // TODO: HideLoading
     }
 
     private fun onErrorState() {
