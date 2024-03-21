@@ -12,14 +12,16 @@ import com.example.pickleverse.databinding.ItemCharacterBinding
 import com.example.pickleverse.domain.model.Character
 import com.example.pickleverse.presentation.utils.GlideImageLoader
 
-class CharacterListAdapter: RecyclerView.Adapter<CharacterListAdapter.CharacterViewHolder>() {
+class CharacterListAdapter(
+    private val onItemClick: (Int) -> Unit
+): RecyclerView.Adapter<CharacterListAdapter.CharacterViewHolder>() {
 
     private var characterList: List<Character> = emptyList()
     private var highlightedLetterList: List<Char> = emptyList()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CharacterViewHolder {
         val binding = ItemCharacterBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        return CharacterViewHolder(binding)
+        return CharacterViewHolder(binding, onItemClick)
     }
 
     override fun onBindViewHolder(holder: CharacterViewHolder, position: Int) {
@@ -39,7 +41,10 @@ class CharacterListAdapter: RecyclerView.Adapter<CharacterListAdapter.CharacterV
 
     fun getCharacterList(): List<Character> = characterList
 
-    inner class CharacterViewHolder(private val binding: ItemCharacterBinding) : RecyclerView.ViewHolder(binding.root) {
+    inner class CharacterViewHolder(
+        private val binding: ItemCharacterBinding,
+        private val onItemClick: (Int) -> Unit
+    ) : RecyclerView.ViewHolder(binding.root) {
 
         private val imageLoader: GlideImageLoader = GlideImageLoader()
 
@@ -48,6 +53,9 @@ class CharacterListAdapter: RecyclerView.Adapter<CharacterListAdapter.CharacterV
                 item.image?.let { imageLoader.loadSimpleImage(it, ivImage, true) }
                 tvName.text = highlightSearchedLetters(item.name.orEmpty())
                 tvStatus.text = item.status
+                itemView.setOnClickListener {
+                    item.id?.let{ onItemClick(it) }
+                }
             }
         }
     }
