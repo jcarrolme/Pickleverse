@@ -23,5 +23,20 @@ class RemoteCharacterDataStore @Inject constructor(private val characterApi: Cha
             CustomResult.Error(Exception("Remote api call failed with exception: $e"))
         }
     }
+
+    suspend fun getCharactersByName(query: String): CustomResult<CharacterResponseBo> {
+        return try {
+            val response = characterApi.getCharactersByName(query)
+            if (response.isSuccessful) {
+                response.body()?.let { items ->
+                    CustomResult.Success(items.toDomain())
+                } ?: CustomResult.Error(Exception("Null list of Characters"))
+            } else {
+                CustomResult.Error(Exception("getCharactersByName request failed with error ${response.errorBody()}"))
+            }
+        } catch (e: IOException) {
+            CustomResult.Error(Exception("Remote api call failed with exception: $e"))
+        }
+    }
 }
 
