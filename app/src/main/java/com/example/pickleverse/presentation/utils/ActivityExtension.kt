@@ -6,8 +6,6 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.pickleverse.R
 import com.example.pickleverse.presentation.BaseActivity
-import com.example.pickleverse.presentation.character.list.CharacterListAdapter
-import com.example.pickleverse.presentation.character.list.GridSpacingItemDecoration
 
 fun BaseActivity.configRecyclerViewFallDown(recyclerView: RecyclerView) {
     val layoutManager = GridLayoutManager(this, 2)

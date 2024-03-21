@@ -1,4 +1,4 @@
-package com.example.pickleverse.presentation.character.list
+package com.example.pickleverse.presentation.utils
 
 import android.graphics.Rect
 import android.view.View
