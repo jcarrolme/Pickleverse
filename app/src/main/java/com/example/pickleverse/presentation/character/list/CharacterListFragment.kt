@@ -6,8 +6,10 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.Toast
 import androidx.appcompat.widget.SearchView
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.isVisible
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Lifecycle
@@ -15,6 +17,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.example.pickleverse.R
 import com.example.pickleverse.databinding.FragmentCharacterListBinding
 import com.example.pickleverse.domain.model.Character
@@ -71,16 +74,11 @@ class CharacterListFragment : Fragment() {
         binding.rvCharacterList.adapter = adapter
     }
 
-    @SuppressLint("NotifyDataSetChanged")
-    private fun updateAdapter(list: List<Character>) {
+    private fun updateAdapter(list: List<Character>, highlightedLetterList: List<Char>) {
+        val diffResult = DiffUtil.calculateDiff(CharacterDiffCallback(adapter.getCharacterList(), list))
+        adapter.setLetterList(highlightedLetterList)
         adapter.setCharacterList(list)
-
-        if (adapter.getCharacterList().isNotEmpty()) {
-            val diffResult = DiffUtil.calculateDiff(CharacterDiffCallback(adapter.getCharacterList(), list))
-            adapter.setCharacterList(list)
-            diffResult.dispatchUpdatesTo(adapter)
-            adapter.notifyDataSetChanged()
-        }
+        diffResult.dispatchUpdatesTo(adapter)
     }
 
     private fun initSearchView() {
@@ -90,7 +88,9 @@ class CharacterListFragment : Fragment() {
             }
 
             override fun onQueryTextChange(newText: String?): Boolean {
-                newText?.let { searchCharacters(it) }
+                newText?.let { query ->
+                    searchCharacters(query)
+                }
                 return true
             }
         })
@@ -98,6 +98,7 @@ class CharacterListFragment : Fragment() {
 
     private fun searchCharacters(query: String) {
         viewModel.searchCharactersByName(query)
+        viewModel.updateHighlightedLetters(query.lowercase().toCharArray().toList())
     }
 
     private fun initUiState() {
@@ -105,6 +106,8 @@ class CharacterListFragment : Fragment() {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.uiState.collect { uiState ->
                     when (uiState) {
+                        ListUiState.InitialLoading ->
+                            onInitialLoading()
                         ListUiState.Loading ->
                             onLoadingState()
                         ListUiState.HideLoading ->
@@ -112,29 +115,61 @@ class CharacterListFragment : Fragment() {
                         is ListUiState.Error ->
                             onErrorState()
                         is ListUiState.Success ->
-                            onSuccessState(uiState.list)
+                            onSuccessState(uiState.list, uiState.highlightedLetterList)
                     }
                 }
             }
         }
     }
 
+    private fun onInitialLoading() {
+        manageUiVisibility(
+            searchBar = false,
+            recyclerView = false,
+            loading = true,
+            emptyLayout = false
+        )
+    }
+
     private fun onLoadingState() {
-        Toast.makeText(context, "START", Toast.LENGTH_SHORT).show()
+        // Do nothing
     }
 
     private fun onHideLoadingState() {
-        Toast.makeText(context, "HIDE", Toast.LENGTH_SHORT).show()
+        binding.ivLoadingImage.isVisible = false
     }
 
-    private fun onSuccessState(list: List<Character>) {
-        updateAdapter(list)
-        binding.searchView.isVisible = true
-        // TODO: HideLoading
+    private fun onSuccessState(list: List<Character>, highlightedLetterList: List<Char>) {
+        updateAdapter(list, highlightedLetterList)
+        manageUiVisibility(
+            searchBar = true,
+            recyclerView = true,
+            loading = false,
+            emptyLayout = false
+        )
     }
 
     private fun onErrorState() {
-        Toast.makeText(requireContext(), "Error", Toast.LENGTH_SHORT).show()
+        manageUiVisibility(
+            searchBar = true,
+            recyclerView = false,
+            loading = false,
+            emptyLayout = true
+        )
+    }
+
+    private fun manageUiVisibility(
+        searchBar: Boolean,
+        recyclerView: Boolean,
+        loading: Boolean,
+        emptyLayout: Boolean
+    ) {
+        binding.apply {
+            searchView.isVisible = searchBar
+            rvCharacterList.isVisible = recyclerView
+            ivLoadingImage.isVisible = loading
+            clEmptyList.isVisible = emptyLayout
+        }
     }
 
     override fun onDestroyView() {
