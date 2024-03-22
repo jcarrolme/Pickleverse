@@ -4,6 +4,9 @@
     <!-- Colors -->
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="dead">#CA3C3C</color>
+    <color name="alive">#53B88C</color>
+    <color name="deadForeground">#46000000</color>
     <color name="blackGrey1">#0f0f0f</color>
     <color name="blackGrey2">#252525</color>
     <color name="black50opacity">#83000000</color>

@@ -8,7 +8,8 @@
     app:cardElevation="@dimen/dimen_10dp"
     android:outlineSpotShadowColor="#53B88C"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools">
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/cardView">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -41,20 +42,6 @@
             android:textSize="16sp"
             android:shadowColor="#53B88C"
             tools:text="Rick Sanchez"/>
-
-        <TextView
-            android:id="@+id/tvStatus"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:layout_constraintBottom_toBottomOf="@id/ivImage"
-            app:layout_constraintStart_toStartOf="@id/ivImage"
-            android:layout_marginBottom="@dimen/dimen_4dp"
-            android:background="@drawable/background_rounded_tag_status"
-            android:paddingVertical="2dp"
-            android:paddingEnd="@dimen/dimen_8dp"
-            android:paddingStart="@dimen/dimen_4dp"
-            android:visibility="gone"
-            android:text="alive"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </com.google.android.material.card.MaterialCardView>
