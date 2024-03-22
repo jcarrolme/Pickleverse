@@ -1,6 +1,6 @@
 package com.example.pickleverse.domain.model
 
-data class Character(
+data class CharacterDetail(
     val id: Int?,
     val name: String?,
     val status: String?,

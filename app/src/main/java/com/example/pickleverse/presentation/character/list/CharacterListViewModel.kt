@@ -90,6 +90,6 @@ class CharacterListViewModel @Inject constructor(
     }
 
     companion object {
-        private const val DELAY = 1000L
+        private const val DELAY = 2500L
     }
 }

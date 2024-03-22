@@ -13,7 +13,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.DiffUtil
 import com.example.pickleverse.databinding.FragmentCharacterListBinding
-import com.example.pickleverse.domain.model.Character
+import com.example.pickleverse.domain.model.CharacterDetail
 import com.example.pickleverse.presentation.BaseActivity
 import com.example.pickleverse.presentation.character.detail.CharacterDetailFragment
 import com.example.pickleverse.presentation.utils.configRecyclerViewFallDown
@@ -72,7 +72,7 @@ class CharacterListFragment : Fragment() {
         binding.rvCharacterList.adapter = adapter
     }
 
-    private fun updateAdapter(list: List<Character>, highlightedLetterList: List<Char>) {
+    private fun updateAdapter(list: List<CharacterDetail>, highlightedLetterList: List<Char>) {
         val diffResult = DiffUtil.calculateDiff(CharacterDiffCallback(adapter.getCharacterList(), list))
         adapter.setLetterList(highlightedLetterList)
         adapter.setCharacterList(list)
@@ -142,7 +142,7 @@ class CharacterListFragment : Fragment() {
         binding.ivLoadingImage.isVisible = false
     }
 
-    private fun onSuccessState(list: List<Character>, highlightedLetterList: List<Char>) {
+    private fun onSuccessState(list: List<CharacterDetail>, highlightedLetterList: List<Char>) {
         updateAdapter(list, highlightedLetterList)
         manageUiVisibility(
             searchBar = true,
