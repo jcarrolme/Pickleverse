@@ -54,9 +54,16 @@ class CharacterListFragment : Fragment() {
     }
 
     private fun initUi() {
+        initListeners()
         initAdapter()
         initRecycler()
         initSearchView()
+    }
+
+    private fun initListeners() {
+        binding.ivSearchIcon.setOnClickListener {
+            binding.searchView.isVisible = !binding.searchView.isVisible
+        }
     }
 
     private fun initRecycler() {
@@ -145,7 +152,7 @@ class CharacterListFragment : Fragment() {
     private fun onSuccessState(list: List<CharacterDetail>, highlightedLetterList: List<Char>) {
         updateAdapter(list, highlightedLetterList)
         manageUiVisibility(
-            searchBar = true,
+            searchBar = false,
             recyclerView = true,
             loading = false,
             emptyLayout = false
