@@ -127,7 +127,7 @@ class CharacterDetailFragment : BottomSheetDialogFragment() {
                 when(newState) {
                     BottomSheetBehavior.STATE_EXPANDED -> {
                         binding.apply {
-                            root.setBackgroundResource(R.color.blackGrey2)
+                            root.setBackgroundResource(R.color.background_main)
                             ivImage.setBackgroundResource(0)
                         }
                     }

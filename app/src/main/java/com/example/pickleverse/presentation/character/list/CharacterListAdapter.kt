@@ -13,13 +13,14 @@ import com.example.pickleverse.R
 import com.example.pickleverse.databinding.ItemCharacterBinding
 import com.example.pickleverse.domain.model.CharacterDetail
 import com.example.pickleverse.presentation.utils.GlideImageLoader
+import java.util.regex.Pattern
 
 class CharacterListAdapter(
     private val onItemClick: (Int) -> Unit
 ): RecyclerView.Adapter<CharacterListAdapter.CharacterViewHolder>() {
 
     private var characterList: List<CharacterDetail> = emptyList()
-    private var highlightedLetterList: List<Char> = emptyList()
+    private var highlightedLetters: String = ""
     private val imageLoader: GlideImageLoader = GlideImageLoader()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CharacterViewHolder {
@@ -38,8 +39,8 @@ class CharacterListAdapter(
         characterList = newCharacterList
     }
 
-    fun setLetterList(newLetterList: List<Char>) {
-        highlightedLetterList = newLetterList
+    fun setLetterList(newLetter: String) {
+        highlightedLetters = newLetter
     }
 
     fun getCharacterList(): List<CharacterDetail> = characterList
@@ -52,7 +53,7 @@ class CharacterListAdapter(
         fun bind(item: CharacterDetail) {
             binding.apply {
                 item.image?.let { imageLoader.loadSimpleImage(it, ivImage, true) }
-                tvName.text = highlightSearchedLetters(item.name.orEmpty())
+                tvName.text = highlightSearchTerm(item.name, highlightedLetters)
                 itemView.setOnClickListener {
                     item.id?.let{ onItemClick(it) }
                 }
@@ -60,17 +61,21 @@ class CharacterListAdapter(
         }
     }
 
-    private fun highlightSearchedLetters(name: String): SpannableString {
+    fun highlightSearchTerm(name: String?, searchTerm: String): SpannableString {
         val spannableName = SpannableString(name)
-        for (letter in highlightedLetterList) {
-            val letterIndex = name.indexOf(letter, ignoreCase = true)
-            if (letterIndex != -1) {
-                letterIndex.let {
-                    spannableName.setSpan(ForegroundColorSpan(Color.WHITE),
-                        it, letterIndex + 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
-                }
-            }
+        val pattern = Pattern.compile(searchTerm, Pattern.CASE_INSENSITIVE)
+        val matcher = pattern.matcher(name)
+
+        while (matcher.find()) {
+            val start = matcher.start()
+            val end = matcher.end()
+            spannableName.setSpan(
+                ForegroundColorSpan(Color.WHITE),
+                start, end,
+                Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+            )
         }
+
         return spannableName
     }
 }
