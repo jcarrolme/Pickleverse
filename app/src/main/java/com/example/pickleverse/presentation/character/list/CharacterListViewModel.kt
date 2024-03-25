@@ -22,11 +22,13 @@ class CharacterListViewModel @Inject constructor(
     private val _uiState = MutableStateFlow<ListUiState>(ListUiState.InitialLoading)
     val uiState: StateFlow<ListUiState> = _uiState
 
-    private var highlightedLettersList : List<Char> = listOf()
+    private var highlightedLetters: String = ""
+    var initLoading: Boolean = true
 
     fun getCharacters() {
         viewModelScope.launch(Dispatchers.IO) {
             _uiState.value = ListUiState.InitialLoading
+            initLoading = true
 
             // Simulated delay
             delay(DELAY)
@@ -36,10 +38,10 @@ class CharacterListViewModel @Inject constructor(
                     is CustomResult.Success -> {
                         if (response.data != null) {
                             response.data.results?.let { results ->
-                                _uiState.value = ListUiState.Success(results, highlightedLettersList)
+                                _uiState.value = ListUiState.Success(results, highlightedLetters)
                             }
                         } else {
-                            _uiState.value = ListUiState.Success(emptyList(), highlightedLettersList)
+                            _uiState.value = ListUiState.Success(emptyList(), highlightedLetters)
                         }
                     }
                     is CustomResult.Error -> {
@@ -57,6 +59,8 @@ class CharacterListViewModel @Inject constructor(
     }
 
     fun searchCharactersByName(query: String) {
+        highlightedLetters = query
+        if (initLoading) initLoading = false
         viewModelScope.launch(Dispatchers.IO) {
             _uiState.value = ListUiState.Loading
 
@@ -65,10 +69,10 @@ class CharacterListViewModel @Inject constructor(
                     is CustomResult.Success -> {
                         if (response.data != null) {
                             response.data.results?.let { results ->
-                                _uiState.value = ListUiState.Success(results,highlightedLettersList)
+                                _uiState.value = ListUiState.Success(results,highlightedLetters)
                             }
                         } else {
-                            _uiState.value = ListUiState.Success(emptyList(), highlightedLettersList)
+                            _uiState.value = ListUiState.Success(emptyList(), highlightedLetters)
                         }
                     }
                     is CustomResult.Error -> {
@@ -85,8 +89,8 @@ class CharacterListViewModel @Inject constructor(
         }
     }
 
-    fun updateHighlightedLetters(newLetters: List<Char>) {
-        highlightedLettersList = newLetters
+    fun updateHighlightedLetters(newLetters: String) {
+        highlightedLetters = newLetters
     }
 
     companion object {

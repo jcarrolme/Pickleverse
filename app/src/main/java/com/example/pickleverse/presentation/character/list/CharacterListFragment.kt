@@ -61,8 +61,32 @@ class CharacterListFragment : Fragment() {
     }
 
     private fun initListeners() {
-        binding.ivSearchIcon.setOnClickListener {
-            binding.searchView.isVisible = !binding.searchView.isVisible
+        binding.lavSearchIcon.setOnClickListener {
+            onSearchIconClick()
+        }
+    }
+
+    private fun onSearchIconClick() {
+        startSearchIconAnimation()
+        binding.apply {
+            if (searchView.isVisible){
+                searchView.setQuery("", true)
+                searchView.clearFocus()
+                searchView.isVisible = false
+                viewModel.initLoading = true
+            } else {
+                searchView.isVisible = true
+            }
+        }
+    }
+
+    private fun startSearchIconAnimation() {
+        binding.apply {
+            if (!binding.searchView.isVisible) {
+                lavSearchIcon.setMinAndMaxProgress(0f, 0.43f)
+            } else lavSearchIcon.setMinAndMaxProgress(0.60f, 1f)
+            lavSearchIcon.speed = 5f
+            lavSearchIcon.playAnimation()
         }
     }
 
@@ -79,7 +103,7 @@ class CharacterListFragment : Fragment() {
         binding.rvCharacterList.adapter = adapter
     }
 
-    private fun updateAdapter(list: List<CharacterDetail>, highlightedLetterList: List<Char>) {
+    private fun updateAdapter(list: List<CharacterDetail>, highlightedLetterList: String) {
         val diffResult = DiffUtil.calculateDiff(CharacterDiffCallback(adapter.getCharacterList(), list))
         adapter.setLetterList(highlightedLetterList)
         adapter.setCharacterList(list)
@@ -94,6 +118,9 @@ class CharacterListFragment : Fragment() {
     private fun initSearchView() {
         binding.searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
+                query?.let {
+                    searchCharacters(query)
+                }
                 return true
             }
 
@@ -108,7 +135,7 @@ class CharacterListFragment : Fragment() {
 
     private fun searchCharacters(query: String) {
         viewModel.searchCharactersByName(query)
-        viewModel.updateHighlightedLetters(query.lowercase().toCharArray().toList())
+        viewModel.updateHighlightedLetters(query)
     }
 
     private fun initUiState() {
@@ -125,7 +152,7 @@ class CharacterListFragment : Fragment() {
                         is ListUiState.Error ->
                             onErrorState()
                         is ListUiState.Success ->
-                            onSuccessState(uiState.list, uiState.highlightedLetterList)
+                            onSuccessState(uiState.list, uiState.highlightedLetters)
                     }
                 }
             }
@@ -149,10 +176,10 @@ class CharacterListFragment : Fragment() {
         binding.ivLoadingImage.isVisible = false
     }
 
-    private fun onSuccessState(list: List<CharacterDetail>, highlightedLetterList: List<Char>) {
+    private fun onSuccessState(list: List<CharacterDetail>, highlightedLetterList: String) {
         updateAdapter(list, highlightedLetterList)
         manageUiVisibility(
-            searchBar = false,
+            searchBar = !viewModel.initLoading,
             recyclerView = true,
             loading = false,
             emptyLayout = false

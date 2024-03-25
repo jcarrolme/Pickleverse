@@ -58,17 +58,24 @@
         app:layout_constraintStart_toStartOf="parent"
         android:layout_marginTop="@dimen/dimen_16dp"
         android:layout_marginStart="@dimen/dimen_16dp"
+        android:textStyle="bold"
+        android:textColor="#C0FF57"
+        android:textSize="@dimen/size_30sp"
         android:text="Characters"/>
 
-    <ImageView
-        android:id="@+id/ivSearchIcon"
-        android:layout_width="@dimen/dimen_20dp"
-        android:layout_height="@dimen/dimen_20dp"
+    <com.airbnb.lottie.LottieAnimationView
+        android:id="@+id/lavSearchIcon"
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/dimen_0dp"
         app:layout_constraintTop_toTopOf="@id/tvCharactersLabel"
         app:layout_constraintBottom_toBottomOf="@id/tvCharactersLabel"
         app:layout_constraintEnd_toEndOf="parent"
+        android:adjustViewBounds="true"
         android:layout_marginEnd="@dimen/dimen_16dp"
-        android:src="@drawable/ic_launcher_background"/>
+        app:lottie_autoPlay="false"
+        app:lottie_loop="false"
+        app:lottie_rawRes="@raw/animation_search_close"
+        app:lottie_colorFilter="#C0FF57"/>
 
     <View
         android:id="@+id/dividerLabel"
@@ -76,7 +83,7 @@
         android:layout_height="1dp"
         android:layout_marginTop="@dimen/dimen_8dp"
         android:layout_marginStart="@dimen/dimen_16dp"
-        android:background="@color/white"
+        android:background="#C0FF57"
         app:layout_constraintTop_toBottomOf="@id/searchView"/>
 
     <androidx.appcompat.widget.SearchView
@@ -88,7 +95,7 @@
         android:layout_marginEnd="@dimen/dimen_16dp"
         app:queryHint="Search"
         app:iconifiedByDefault="false"
-        android:background="@color/blackGrey1"
+        android:background="@color/blackGrey2"
         android:visibility="gone"/>
 
     <androidx.recyclerview.widget.RecyclerView
@@ -101,7 +108,5 @@
         app:spanCount="2"
         tools:listitem="@layout/item_character"
         tools:visibility="gone"/>
-
-
 
 </androidx.constraintlayout.widget.ConstraintLayout>
