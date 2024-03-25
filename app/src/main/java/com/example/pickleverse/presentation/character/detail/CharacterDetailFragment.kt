@@ -110,9 +110,10 @@ class CharacterDetailFragment : BottomSheetDialogFragment() {
             }
             tvName.text = item.name
             tvGender.text = item.gender
-            tvOrigin.text = item.origin?.name
+            tvOrigin.text = item.origin?.name ?: ""
             tvSpecies.text = item.species
             tvStatus.text = item.status
+            tvLocation.text = item.location?.name ?: ""
         }
     }
 
@@ -126,7 +127,7 @@ class CharacterDetailFragment : BottomSheetDialogFragment() {
                 when(newState) {
                     BottomSheetBehavior.STATE_EXPANDED -> {
                         binding.apply {
-                            root.setBackgroundResource(0)
+                            root.setBackgroundResource(R.color.blackGrey2)
                             ivImage.setBackgroundResource(0)
                         }
                     }
