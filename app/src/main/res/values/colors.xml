@@ -1,10 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!-- Background -->
+    <color name="background_main">@color/white</color>
+    <color name="background_secondary">#A3A3A3</color>
+    <!-- Text -->
+    <color name="text_main">@color/black_desaturated_primary</color>
 
     <!-- Colors -->
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+
+    <color name="dead">#CA3C3C</color>
+    <color name="alive">#53B88C</color>
+    <color name="deadForeground">#46000000</color>
     <color name="blackGrey1">#0f0f0f</color>
     <color name="blackGrey2">#252525</color>
     <color name="black50opacity">#83000000</color>
+    <color name="white50opacity">#7AFFFFFF</color>
+    <color name="red">#FF0000</color>
+    <color name="black_desaturated_primary">#222222</color>
+    <color name="black_desaturated_secondary">#3A3A3A</color>
+    <color name="white_main">#D6D6D6</color>
+    <color name="low_gray">#A3A3A3</color>
 </resources>

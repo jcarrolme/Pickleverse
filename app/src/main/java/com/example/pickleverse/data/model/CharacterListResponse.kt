@@ -1,20 +1,20 @@
 package com.example.pickleverse.data.model
 
-import com.example.pickleverse.domain.model.Character
+import com.example.pickleverse.domain.model.CharacterDetail
 import com.example.pickleverse.domain.model.CharacterLocation
 import com.example.pickleverse.domain.model.CharacterOrigin
 import com.example.pickleverse.domain.model.CharacterResponseBo
 import com.example.pickleverse.domain.model.Info
 import com.google.gson.annotations.SerializedName
 
-data class CharacterResponse(
+data class CharacterListResponse(
     @SerializedName("info")
     val info: InfoDto?,
     @SerializedName("results")
-    val results: List<CharacterDto>
+    val results: List<CharacterDetailDto>
 )
 
-data class CharacterDto (
+data class CharacterDetailDto (
     @SerializedName("id")
     val id: Int?,
     @SerializedName("name")
@@ -66,9 +66,9 @@ data class InfoDto (
     val prev: String?
 )
 
-fun CharacterResponse.toDomain(): CharacterResponseBo {
+fun CharacterListResponse.toDomain(): CharacterResponseBo {
     val list = results.map { dto ->
-        Character(
+        CharacterDetail(
             id = dto.id,
             name = dto.name,
             status = dto.status,
@@ -85,6 +85,22 @@ fun CharacterResponse.toDomain(): CharacterResponseBo {
     }
     return CharacterResponseBo(info?.toDomain(info), list)
 }
+
+fun CharacterDetailDto.toDomain(): CharacterDetail =
+    CharacterDetail(
+        id = id,
+        name = name,
+        status = status,
+        species = species,
+        type = type,
+        gender = gender,
+        origin = origin?.toDomain(origin),
+        location = location?.toDomain(location),
+        image = image,
+        episode = episode,
+        url = url,
+        created = created
+    )
 
 fun CharacterOriginDto.toDomain(dto: CharacterOriginDto): CharacterOrigin =
     CharacterOrigin(

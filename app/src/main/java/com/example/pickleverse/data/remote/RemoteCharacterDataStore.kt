@@ -1,7 +1,9 @@
 package com.example.pickleverse.data.remote
 
 import com.example.pickleverse.data.core.CustomResult
+import com.example.pickleverse.data.model.CharacterDetailDto
 import com.example.pickleverse.data.model.toDomain
+import com.example.pickleverse.domain.model.CharacterDetail
 import com.example.pickleverse.domain.model.CharacterResponseBo
 import java.io.IOException
 import java.lang.Exception
@@ -33,6 +35,21 @@ class RemoteCharacterDataStore @Inject constructor(private val characterApi: Cha
                 } ?: CustomResult.Error(Exception("Null list of Characters"))
             } else {
                 CustomResult.Error(Exception("getCharactersByName request failed with error ${response.errorBody()}"))
+            }
+        } catch (e: IOException) {
+            CustomResult.Error(Exception("Remote api call failed with exception: $e"))
+        }
+    }
+
+    suspend fun getCharacterById(id: Int): CustomResult<CharacterDetail> {
+        return try {
+            val response = characterApi.getCharacterById(id)
+            if (response.isSuccessful) {
+                response.body()?.let { item ->
+                    CustomResult.Success(item.toDomain())
+                } ?: CustomResult.Error(Exception("Null character"))
+            } else {
+                CustomResult.Error(Exception("getCharacterById request failed with error ${response.errorBody()}"))
             }
         } catch (e: IOException) {
             CustomResult.Error(Exception("Remote api call failed with exception: $e"))

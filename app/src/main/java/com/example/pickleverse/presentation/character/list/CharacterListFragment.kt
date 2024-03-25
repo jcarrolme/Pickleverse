@@ -1,27 +1,21 @@
 package com.example.pickleverse.presentation.character.list
 
-import android.annotation.SuppressLint
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
-import android.widget.Toast
 import androidx.appcompat.widget.SearchView
-import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.isVisible
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.DiffUtil
-import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.RecyclerView
-import com.example.pickleverse.R
 import com.example.pickleverse.databinding.FragmentCharacterListBinding
-import com.example.pickleverse.domain.model.Character
+import com.example.pickleverse.domain.model.CharacterDetail
 import com.example.pickleverse.presentation.BaseActivity
+import com.example.pickleverse.presentation.character.detail.CharacterDetailFragment
 import com.example.pickleverse.presentation.utils.configRecyclerViewFallDown
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
@@ -70,15 +64,24 @@ class CharacterListFragment : Fragment() {
     }
 
     private fun initAdapter() {
-        adapter = CharacterListAdapter()
+        adapter = CharacterListAdapter(
+            onItemClick = { id ->
+                onCharacterClicked(id)
+            }
+        )
         binding.rvCharacterList.adapter = adapter
     }
 
-    private fun updateAdapter(list: List<Character>, highlightedLetterList: List<Char>) {
+    private fun updateAdapter(list: List<CharacterDetail>, highlightedLetterList: List<Char>) {
         val diffResult = DiffUtil.calculateDiff(CharacterDiffCallback(adapter.getCharacterList(), list))
         adapter.setLetterList(highlightedLetterList)
         adapter.setCharacterList(list)
         diffResult.dispatchUpdatesTo(adapter)
+    }
+
+    private fun onCharacterClicked(id: Int) {
+        val fragment = CharacterDetailFragment.newInstance(id)
+        fragment.show(requireActivity().supportFragmentManager, CharacterDetailFragment.TAG)
     }
 
     private fun initSearchView() {
@@ -139,7 +142,7 @@ class CharacterListFragment : Fragment() {
         binding.ivLoadingImage.isVisible = false
     }
 
-    private fun onSuccessState(list: List<Character>, highlightedLetterList: List<Char>) {
+    private fun onSuccessState(list: List<CharacterDetail>, highlightedLetterList: List<Char>) {
         updateAdapter(list, highlightedLetterList)
         manageUiVisibility(
             searchBar = true,

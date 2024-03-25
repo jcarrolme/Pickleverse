@@ -1,10 +1,10 @@
 package com.example.pickleverse.presentation.character.list
 
 import androidx.recyclerview.widget.DiffUtil
-import com.example.pickleverse.domain.model.Character
+import com.example.pickleverse.domain.model.CharacterDetail
 class CharacterDiffCallback(
-    private val oldList: List<Character>,
-    private val newList: List<Character>
+    private val oldList: List<CharacterDetail>,
+    private val newList: List<CharacterDetail>
 ) : DiffUtil.Callback() {
 
     override fun getOldListSize(): Int = oldList.size
