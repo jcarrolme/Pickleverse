@@ -41,4 +41,17 @@
         <item name="android:textSize">@dimen/size_20sp</item>
         <item name="android:textColor">@color/white</item>
     </style>
+    <style name="roboto_bold_16_acid" parent="Theme.Material3.DayNight.NoActionBar">
+        <item name="android:fontFamily">@font/roboto_bold</item>
+        <item name="android:textSize">@dimen/size_20sp</item>
+        <item name="android:textColor">@color/white</item>
+    </style>
+
+
+
+    android:textStyle="bold"
+    android:textColor="#C0FF57"
+    android:shadowRadius="10"
+    android:textSize="16sp"
+    android:shadowColor="#53B88C"
 </resources>

@@ -1,5 +1,10 @@
 <resources>
     <string name="app_name">Pickleverse</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <!-- Detail Fragment -->
+    <string name="tv_empty_search">"Nothing to do here"</string>
+    <string name="tv_label">"Characters"</string>
+    <string name="searchView_hint">"Search"</string>
+
+
 </resources>
